@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanteenBot System Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .node { transition: all 0.3s ease; }
+        .node:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+        .glow { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-slate-800">Sweeply System Architecture</h1>
+            <p class="text-slate-500 mt-2">Autonomous Hybrid-Control Cleaning System</p>
+        </header>
+
+        <!-- SVG Diagram Container -->
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+            <svg viewBox="0 0 800 600" class="w-full h-auto">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+                    </marker>
+                </defs>
+
+                <!-- SECTION: USER LAYER -->
+                <g class="node" id="user-layer">
+                    <rect x="50" y="50" width="180" height="120" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+                    <text x="140" y="80" text-anchor="middle" font-weight="bold" fill="#1e40af">User Interface</text>
+                    <text x="140" y="110" text-anchor="middle" font-size="12" fill="#3b82f6">Web App (React)</text>
+                    <text x="140" y="130" text-anchor="middle" font-size="10" fill="#64748b">• Take Photo of Mess</text>
+                    <text x="140" y="145" text-anchor="middle" font-size="10" fill="#64748b">• Table Number Entry</text>
+                </g>
+
+                <!-- SECTION: CLOUD BRIDGE -->
+                <g class="node" id="cloud-layer">
+                    <rect x="310" y="50" width="180" height="120" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2" />
+                    <text x="400" y="80" text-anchor="middle" font-weight="bold" fill="#166534">Cloud Backend</text>
+                    <text x="400" y="110" text-anchor="middle" font-size="12" fill="#22c55e">Firebase / MQTT</text>
+                    <text x="400" y="130" text-anchor="middle" font-size="10" fill="#64748b">• Image Storage</text>
+                    <text x="400" y="145" text-anchor="middle" font-size="10" fill="#64748b">• Request Queue</text>
+                </g>
+
+                <!-- Arrows: User to Cloud -->
+                <path d="M 230 110 L 300 110" class="arrow" />
+                <text x="265" y="100" text-anchor="middle" font-size="10" fill="#94a3b8">HTTPS</text>
+
+                <!-- SECTION: ROBOT BRAIN -->
+                <g class="node" id="robot-brain">
+                    <rect x="260" y="250" width="280" height="280" rx="20" fill="#f8fafc" stroke="#64748b" stroke-width="3" />
+                    <text x="400" y="285" text-anchor="middle" font-weight="bold" fill="#334155">Robot Core (NVIDIA Jetson)</text>
+                    
+                    <!-- Internal Modules -->
+                    <rect x="280" y="305" width="240" height="50" rx="5" fill="#fee2e2" stroke="#ef4444" />
+                    <text x="400" y="335" text-anchor="middle" font-size="12" font-weight="bold" fill="#991b1b">CV Engine (YOLOv11)</text>
+
+                    <rect x="280" y="365" width="240" height="50" rx="5" fill="#ffedd5" stroke="#f97316" />
+                    <text x="400" y="395" text-anchor="middle" font-size="12" font-weight="bold" fill="#9a3412">Navigation Stack (ROS2)</text>
+
+                    <rect x="280" y="425" width="240" height="50" rx="5" fill="#faf5ff" stroke="#a855f7" />
+                    <text x="400" y="455" text-anchor="middle" font-size="12" font-weight="bold" fill="#6b21a8">Actuator Control</text>
+                </g>
+
+                <!-- SECTION: SENSORS -->
+                <g class="node">
+                    <circle cx="100" cy="350" r="40" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="4" />
+                    <text x="100" y="355" text-anchor="middle" font-size="10" font-weight="bold">LiDAR</text>
+                    <path d="M 140 350 L 260 350" class="arrow" />
+                </g>
+
+                <g class="node">
+                    <circle cx="100" cy="450" r="40" fill="#f1f5f9" stroke="#3b82f6" />
+                    <text x="100" y="455" text-anchor="middle" font-size="10" font-weight="bold">OAK-D AI Cam</text>
+                    <path d="M 140 450 L 260 450" class="arrow" />
+                </g>
+
+                <!-- Arrows: Cloud to Robot -->
+                <path d="M 400 170 L 400 240" class="arrow" />
+                <text x="415" y="210" text-anchor="start" font-size="10" fill="#94a3b8">MQTT Pub/Sub</text>
+
+                <!-- SECTION: PHYSICAL OUTPUT -->
+                <g class="node">
+                    <rect x="620" y="300" width="130" height="60" rx="5" fill="#f0f9ff" stroke="#0ea5e9" />
+                    <text x="685" y="335" text-anchor="middle" font-size="11" font-weight="bold">Drive Motors</text>
+                    <path d="M 540 330 L 610 330" class="arrow" />
+                </g>
+
+                <g class="node">
+                    <rect x="620" y="420" width="130" height="60" rx="5" fill="#f0f9ff" stroke="#0ea5e9" />
+                    <text x="685" y="455" text-anchor="middle" font-size="11" font-weight="bold">Cleaning Arm</text>
+                    <path d="M 540 450 L 610 450" class="arrow" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- Logic Breakdown Section -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                <h3 class="font-bold text-blue-800 mb-2">1. Request Phase</h3>
+                <p class="text-sm text-blue-600">User triggers via Web App. Image uploaded to cloud. Table coordinates assigned.</p>
+            </div>
+            <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                <h3 class="font-bold text-green-800 mb-2">2. Navigation Phase</h3>
+                <p class="text-sm text-green-600">Robot fetches mission. ROS2 Nav2 guides it. OAK-D monitors for chairs/obstacles.</p>
+            </div>
+            <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
+                <h3 class="font-bold text-purple-800 mb-2">3. Interaction Phase</h3>
+                <p class="text-sm text-purple-600">CV identifies table shape. Robot executes "The Nudge" logic & cleaning patterns.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
